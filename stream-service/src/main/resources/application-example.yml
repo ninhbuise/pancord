@@ -1,0 +1,18 @@
+server:
+  port: 8081
+  servlet:
+    context-path: /pancord
+
+spring:
+  servlet:
+    multipart:
+      max-file-size: 500MB
+
+# Minio configuration
+minio:
+  access:
+    key: admin
+    secret: admin@123
+  bucket.name: il-panda-bucket
+  private.bucket.name: il-panda-private-bucket
+  endpoint: ttp://localhost:9000
