@@ -3,6 +3,15 @@ target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
+.log
+
+# Ignore all application*.yml files
+**/resources/*.yml
+
+# Except for specific files
+!**/resources/application.yml
+!**/resources/application-example.yml
+!**/resources/bootstrap.yml
 
 ### STS ###
 .apt_generated
@@ -39,6 +48,3 @@ dist
 minio-data
 data
 .env
-
-# build output
-!**/src/**/application-local.yml

@@ -5,8 +5,8 @@ import io.minio.GetObjectArgs;
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
 import io.minio.RemoveObjectArgs;
+import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -17,28 +17,24 @@ import java.util.List;
 
 @Log4j2
 @Service
+@AllArgsConstructor
 public class MinioServiceImpl implements MinioService {
 
     private final MinioClient minioClient;
 
-    @Autowired
-    public MinioServiceImpl(MinioClient minioClient) {
-        this.minioClient = minioClient;
-    }
-
     @Override
     public String uploadFile(String bucketName, String folder, MultipartFile file) throws Exception {
         String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
-        String fileName = STR. "\{ folder }/\{ timestamp }_\{ file.getOriginalFilename() }" ;
+        String path = STR. "\{ folder }/\{ timestamp }_\{ file.getOriginalFilename() }" ;
         InputStream inputStream = file.getInputStream();
         var res = minioClient.putObject(PutObjectArgs.builder()
                 .bucket(bucketName)
-                .object(fileName)
+                .object(path)
                 .stream(inputStream, inputStream.available(), -1)
                 .contentType(file.getContentType())
                 .build());
         log.info("upload file {} to {}", res.object(), res.bucket());
-        return fileName;
+        return path;
     }
 
     @Override

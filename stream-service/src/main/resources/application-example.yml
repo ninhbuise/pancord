@@ -3,16 +3,17 @@ server:
   servlet:
     context-path: /pancord
 
-spring:
-  servlet:
-    multipart:
-      max-file-size: 500MB
+datasource:
+  url: your-db-url
+  username: your-db-username
+  password: your-db--password
+  driver-class-name: your-db-driver-class-name
 
 # Minio configuration
 minio:
   access:
-    key: admin
-    secret: admin@123
-  bucket.name: il-panda-bucket
-  private.bucket.name: il-panda-private-bucket
-  endpoint: ttp://localhost:9000
+    key: your-key
+    secret: your-secret
+  bucket.name: your-bucket
+  private.bucket.name: your-private-bucket
+  endpoint: your-minio-api-url
