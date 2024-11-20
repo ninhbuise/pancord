@@ -11,5 +11,7 @@ public interface MinioService {
 
     InputStream downloadFile(String bucketName, String filename);
 
-    boolean removeFile(String bucketName, String folder, List<String> filenames);
+    void removeFile(String bucketName, String path);
+
+    List<String> listFiles(String bucket, String folderName) throws Exception;
 }

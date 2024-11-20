@@ -20,7 +20,7 @@ public class PancordApplication {
 
 	@GetMapping("api/v1/heath")
 	public ResponseEntity<?> heath() {
-		return Utils.appendResponse(HttpStatus.OK, "OK", null);
+		return Utils.appendResponse(HttpStatus.OK, null, null);
 	}
 }
 

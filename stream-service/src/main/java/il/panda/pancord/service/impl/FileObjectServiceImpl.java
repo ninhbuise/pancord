@@ -1,5 +1,6 @@
 package il.panda.pancord.service.impl;
 
+import il.panda.pancord.exception.DoesNotExist;
 import il.panda.pancord.models.entity.FileObject;
 import il.panda.pancord.repository.FileObjectRepository;
 import il.panda.pancord.service.FileObjectService;
@@ -7,10 +8,11 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
 import java.util.UUID;
 
-@AllArgsConstructor
 @Service
+@AllArgsConstructor
 public class FileObjectServiceImpl implements FileObjectService {
 
     private FileObjectRepository repository;
@@ -29,10 +31,20 @@ public class FileObjectServiceImpl implements FileObjectService {
     }
 
     @Override
-    public FileObject findByUUID(UUID id) {
+    public FileObject findByUUID(UUID id) throws DoesNotExist {
         return this.repository.findById(id)
                 .stream()
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("target file does not exist!"));
+                .orElseThrow(() -> new DoesNotExist("target file does not exist!"));
+    }
+
+    @Override
+    public List<FileObject> findAllFileInBucket(String bucketName) {
+        return this.repository.findAllByBucketNameOrderByPathAsc(bucketName);
+    }
+
+    @Override
+    public void removeByUUID(UUID id) {
+        this.repository.deleteById(id);
     }
 }

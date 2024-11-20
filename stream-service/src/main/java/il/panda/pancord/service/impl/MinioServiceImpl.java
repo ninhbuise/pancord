@@ -1,10 +1,8 @@
 package il.panda.pancord.service.impl;
 
 import il.panda.pancord.service.MinioService;
-import io.minio.GetObjectArgs;
-import io.minio.MinioClient;
-import io.minio.PutObjectArgs;
-import io.minio.RemoveObjectArgs;
+import io.minio.*;
+import io.minio.messages.Item;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
@@ -13,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 @Log4j2
@@ -34,39 +33,52 @@ public class MinioServiceImpl implements MinioService {
                 .contentType(file.getContentType())
                 .build());
         log.info("upload file {} to {}", res.object(), res.bucket());
+        inputStream.close();
         return path;
     }
 
     @Override
-    public InputStream downloadFile(String bucketName, String filename) {
+    public InputStream downloadFile(String bucket, String path) {
         try {
             return minioClient.getObject(
                     GetObjectArgs.builder()
-                            .bucket(bucketName)
-                            .object(filename)
+                            .bucket(bucket)
+                            .object(path)
                             .build()
             );
         } catch (Exception e) {
-            log.error("Occurrence error when get file {}, {}", STR. "/\{ bucketName }/\{ filename }" , e.getMessage());
+            log.error("Occurrence error when get file {}, {}", STR. "/\{ bucket }/\{ path }" , e.getMessage());
             return null;
         }
     }
 
     @Override
-    public boolean removeFile(String bucketName, String folder, List<String> filenames) {
+    public void removeFile(String bucketName, String path) {
         try {
-            for (String filename : filenames) {
-                String deleteFile = STR. "/\{ folder }/\{ filename }" ;
-                minioClient.removeObject(RemoveObjectArgs.builder()
-                        .bucket(bucketName)
-                        .object(deleteFile)
-                        .build());
-                log.info("{} has been deleted", deleteFile);
-            }
-            return true;
+            minioClient.removeObject(RemoveObjectArgs.builder()
+                    .bucket(bucketName)
+                    .object(path)
+                    .build());
+            log.info("{} has been deleted", path);
         } catch (Exception e) {
-            log.error("Occurrence error when delete files {}, {}", filenames, e.getMessage());
-            return false;
+            log.error("Occurrence error when delete files {}, {}", path, e.getMessage());
         }
+    }
+
+    @Override
+    public List<String> listFiles(String bucket, String folderName) throws Exception {
+        List<Item> results = new ArrayList<>();
+        var items = minioClient.listObjects(ListObjectsArgs
+                .builder()
+                .bucket(bucket)
+                .prefix(folderName)
+                .recursive(false)
+                .build());
+        for (Result<Item> itemResult : items) {
+            Item i = itemResult.get();
+            if (i.isDir()) continue;
+            results.add(i);
+        }
+        return results.stream().map(Item::objectName).toList();
     }
 }
