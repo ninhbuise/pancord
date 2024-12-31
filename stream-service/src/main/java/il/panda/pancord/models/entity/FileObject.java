@@ -17,7 +17,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Entity
 @Table(name = "FILE_OBJECT", indexes = {@Index(columnList = "CREATE_AT DESC")})
-public class FileObject  implements Serializable {
+public class FileObject implements Serializable {
 
     @Id
     @GeneratedValue(generator = "UUID")
@@ -39,6 +39,9 @@ public class FileObject  implements Serializable {
 
     @Column(name = "CONTENT_TYPE", length = 256, nullable = false)
     private String contentType;
+
+    @Column(name = "Size", length = 256)
+    private long size;
 
     @Column(name = "CREATE_AT", nullable = false)
     private Instant createAt;

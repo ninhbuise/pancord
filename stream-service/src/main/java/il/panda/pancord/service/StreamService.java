@@ -6,8 +6,10 @@ import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBo
 
 import java.util.UUID;
 
+@Transactional(readOnly = true)
 public interface StreamService {
 
-    @Transactional(readOnly = true)
     StreamingResponseBody m3u8Index(String bucket, UUID videoId) throws DoesNotExist;
+
+    StreamingResponseBody loadPartialMediaFile(String bucket, UUID videoId, long startPos, long endPos) throws DoesNotExist;
 }

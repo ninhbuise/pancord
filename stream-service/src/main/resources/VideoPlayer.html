@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Han Media Play - Partial Content</title>
+    <style>
+        .video-div {
+            width: 640px;
+            height: 364px;
+            max-width: 640px;
+            max-height: 364px;
+            min-width: 640px;
+            min-height: 364px;
+        }
+    </style>
+</head>
+<body>
+<h3>This is media streaming</h3>
+<input type="text" id="video-id" placeholder="Enter ID of video" />
+<button onclick="playMedia()">Play</button>
+<div class="video-div">
+    <video
+            id="video-ctrl"
+            muted
+            playsInline
+            loop
+            style="width: 100%; height: auto"
+            controls
+    ></video>
+</div>
+<script>
+    function playMedia() {
+        const videoId = document.getElementById('video-id').value
+        const videoCtrl = document.getElementById('video-ctrl')
+        videoCtrl.src = `http://localhost:8081/pancord/file/api/v1/stream/${videoId}`
+        videoCtrl.load()
+        videoCtrl.play()
+    }
+</script>
+</body>
+</html>

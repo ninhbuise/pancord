@@ -2,6 +2,7 @@ package il.panda.pancord.service;
 
 import il.panda.pancord.exception.DoesNotExist;
 import il.panda.pancord.models.entity.FileObject;
+import il.panda.pancord.models.record.FileProperties;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
@@ -14,6 +15,8 @@ public interface FileObjectService {
     FileObject findByUUID(UUID id) throws DoesNotExist;
 
     List<FileObject> findAllFileInBucket(String bucketName);
+
+    FileProperties getFileProperties(UUID id) throws DoesNotExist ;
 
     void removeByUUID(UUID id);
 }

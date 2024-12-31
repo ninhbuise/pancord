@@ -1,6 +1,13 @@
 version: "3"
 
 services:
+  ffmpeg:
+    image: jrottenberg/ffmpeg:latest
+    container_name: ffmpeg
+    volumes:
+      - ./videos:/videos
+    command: ffmpeg -i /videos/input.mp4 /videos/output.avi
+
   minio:
     image: minio/minio
     container_name: minio

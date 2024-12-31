@@ -2,6 +2,7 @@ package il.panda.pancord.service.impl;
 
 import il.panda.pancord.exception.DoesNotExist;
 import il.panda.pancord.models.entity.FileObject;
+import il.panda.pancord.models.record.FileProperties;
 import il.panda.pancord.repository.FileObjectRepository;
 import il.panda.pancord.service.FileObjectService;
 import lombok.AllArgsConstructor;
@@ -24,6 +25,7 @@ public class FileObjectServiceImpl implements FileObjectService {
                 .bucketName(bucket)
                 .originFileName(file.getOriginalFilename())
                 .contentType(file.getContentType())
+                .size(file.getSize())
                 .title(title)
                 .path(path)
                 .build();
@@ -41,6 +43,15 @@ public class FileObjectServiceImpl implements FileObjectService {
     @Override
     public List<FileObject> findAllFileInBucket(String bucketName) {
         return this.repository.findAllByBucketNameOrderByPathAsc(bucketName);
+    }
+
+    @Override
+    public FileProperties getFileProperties(UUID id) throws DoesNotExist {
+        var fileObject = this.repository.findById(id)
+                .stream()
+                .findFirst()
+                .orElseThrow(() -> new DoesNotExist("target file does not exist!"));
+        return new FileProperties(fileObject.getOriginFileName(), fileObject.getContentType(), fileObject.getSize());
     }
 
     @Override
